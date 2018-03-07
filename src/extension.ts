@@ -1,20 +1,45 @@
 "use strict";
-import * as vscode from "vscode";
+import {
+  window,
+  commands,
+  ExtensionContext,
+  WorkspaceEdit,
+  workspace
+} from "vscode";
 
-export function activate(context: vscode.ExtensionContext) {
-  let disposable = vscode.commands.registerCommand(
-    "extension.showSelectedText",
-    () => {
-      var editor = vscode.window.activeTextEditor;
+export function activate(context: ExtensionContext) {
+  let disposable = commands.registerCommand(
+    "extension.wrapWithRegion",
+    async () => {
+      var editor = window.activeTextEditor;
       if (!editor) {
         return; // No open text editor
       }
 
-      var selection = editor.selection;
-      var text = editor.document.getText(selection);
+      const regionName = await getRegionName();
+      if (!regionName) {
+        return;
+      }
 
-      vscode.window.showInformationMessage(text);
+      var startPosition = editor.selection.active;
+      var endPosittion = editor.selection.end;
+
+      const edit = new WorkspaceEdit();
+      edit.insert(
+        editor.document.uri,
+        startPosition,
+        "\n#region " + regionName + " \n"
+      );
+      edit.insert(editor.document.uri, endPosittion, "\n #endregion\n");
+      workspace.applyEdit(edit);
     }
   );
   context.subscriptions.push(disposable);
+
+  function getRegionName() {
+    return window.showInputBox({
+      prompt: "Region Name",
+      value: "region"
+    });
+  }
 }

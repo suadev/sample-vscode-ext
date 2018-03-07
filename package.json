@@ -11,14 +11,14 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.showSelectedText"
+        "onCommand:extension.wrapWithRegion"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "extension.showSelectedText",
-                "title": "Show Selected Text"
+                "command": "extension.wrapWithRegion",
+                "title": "Wrap with region"
             }
         ]
     },
