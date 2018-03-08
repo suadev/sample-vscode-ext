@@ -13,7 +13,7 @@ export function activate(context: ExtensionContext) {
     async () => {
       var editor = window.activeTextEditor;
       if (!editor) {
-        return; // No open text editor
+        return;
       }
 
       const regionName = await getRegionName();
